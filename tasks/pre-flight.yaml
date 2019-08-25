@@ -1,0 +1,6 @@
+---
+
+- name: Install required packages
+  apt:
+    name: "{{ tplc_packages }}"
+    state: "installed"

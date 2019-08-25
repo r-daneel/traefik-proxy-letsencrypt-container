@@ -10,7 +10,7 @@ defaultEntryPoints = ["http", "https"]
     address = ":{{ tplc_traefik_container_dashboard_port }}"
     [entryPoints.dashboard.auth]
       [entryPoints.dashboard.auth.basic]
-        users = ["admin:$apr1$IgfMadq7$rOApwHiNPVKyCEQUxD7F0/"]
+        users = ["{{ tplc_credentials.stdout }}"]
 
   [entryPoints.http]
     address = ":{{ tplc_traefik_port_http }}"

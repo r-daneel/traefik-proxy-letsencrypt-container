@@ -2,13 +2,15 @@
 
 tplc_domain_name: "local"
 tplc_acme_email: "root@localhost"
+tplc_dashboard_username: "admin"
+tplc_dashboard_password: "{{ tplc_dashboard_username }}"
 
 tplc_traefik_config_dir: "/etc/traefik"
 tplc_traefik_config_dir_owner: "root"
 tplc_traefik_config_dir_group: "root"
 tplc_traefik_config_dir_mode: "0755"
 
-tplc_traefik_config_file: "{{ tplc_traefik_config_dir }}/traefik.toml"
+tplc_traefik_config_file: "{{ tplc_traefik_config_dir }}/{{ tplc_traefik_container_name }}.toml"
 tplc_traefik_config_file_owner: "root"
 tplc_traefik_config_file_group: "root"
 tplc_traefik_config_file_mode: "0755"
