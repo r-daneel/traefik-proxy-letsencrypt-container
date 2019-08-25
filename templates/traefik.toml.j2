@@ -1,0 +1,45 @@
+################################################################
+# frontend entrypoint configuration
+################################################################
+
+defaultEntryPoints = ["http", "https"]
+
+[entryPoints]
+
+  [entryPoints.dashboard]
+    address = ":{{ tplc_traefik_container_dashboard_port }}"
+    [entryPoints.dashboard.auth]
+      [entryPoints.dashboard.auth.basic]
+        users = ["admin:$apr1$IgfMadq7$rOApwHiNPVKyCEQUxD7F0/"]
+
+  [entryPoints.http]
+    address = ":{{ tplc_traefik_port_http }}"
+    [entryPoints.http.redirect]
+      entryPoint = "https"
+
+  [entryPoints.https]
+    address = ":{{ tplc_traefik_port_https }}"
+    [entryPoints.https.tls]
+
+################################################################
+# API and dashboard configuration
+################################################################
+
+[api]
+entrypoint="dashboard"
+
+################################################################
+# Docker configuration backend
+################################################################
+
+[docker]
+domain = "{{ tplc_domain_name }}"
+watch = true
+
+[acme]
+  email = "{{ tplc_acme_email }}"
+  storage = "{{ tplc_traefik_container_certs_file }}"
+  entryPoint = "https"
+  onHostRule = true
+  [acme.httpChallenge]
+    entryPoint = "http"

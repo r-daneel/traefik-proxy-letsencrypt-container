@@ -1,0 +1,50 @@
+---
+
+- name: Create configuration directory
+  file:
+    path: "{{ tplc_traefik_config_dir }}"
+    state: directory
+    owner: "{{ tplc_traefik_config_dir_owner }}"
+    group: "{{ tplc_traefik_config_dir_group }}"
+    mode: "{{ tplc_traefik_config_dir_mode }}"
+
+- name: Create configuration file
+  template:
+    src: "traefik.toml.j2"
+    dest: "{{ tplc_traefik_config_file }}"
+    owner: "{{ tplc_traefik_config_file_owner }}"
+    group: "{{ tplc_traefik_config_file_group }}"
+    mode: "{{ tplc_traefik_config_file_mode }}"
+
+- name: Create certificates directory
+  file:
+    path: "{{ tplc_acme_certs_dir }}"
+    state: directory
+    owner: "{{ tplc_acme_certs_dir_owner }}"
+    group: "{{ tplc_acme_certs_dir_group }}"
+    mode: "{{ tplc_acme_certs_dir_mode }}"
+
+- name: Create certificates file
+  file:
+    path: "{{ tplc_acme_certs_file }}"
+    state: touch
+    owner: "{{ tplc_acme_certs_file_owner }}"
+    group: "{{ tplc_acme_certs_file_group }}"
+    mode:  "{{ tplc_acme_certs_file_mode }}"
+  changed_when: false
+
+- name: Run traefik container
+  docker_container:
+    name: "{{ tplc_traefik_container_name }}"
+    image: "{{ tplc_traefik_image_name }}:{{ tplc_traefik_image_tag }}"
+    published_ports:
+      - "{{ tplc_traefik_port_http }}:{{ tplc_traefik_container_port_http }}"
+      - "{{ tplc_traefik_port_https }}:{{ tplc_traefik_container_port_https }}"
+    volumes:
+      - "{{ tplc_acme_certs_file }}:{{ tplc_traefik_container_certs_file }}:rw"
+      - "{{ tplc_traefik_config_file }}:{{ tplc_traefik_container_config_file }}:ro"
+      - "{{ tplc_docker_socket }}:{{ tplc_traefik_container_docker_socket }}:rw"
+    labels:
+      traefik.frontend.rule: "Host:{{ tplc_traefik_container_name }}.{{ tplc_domain_name }}"
+      traefik.port: "{{ tplc_traefik_container_dashboard_port }}"
+    state: "started"

@@ -1,0 +1,12 @@
+---
+
+- name: Traefik Proxy + LetsEncrypt Container
+  hosts: all
+  gather_facts: false
+  vars:
+    my_domain: "mydomain.com"
+    my_email: "user@mydomain.com"
+  roles:
+    - role: traefik-proxy+letsencrypt-container
+      tplc_domain_name: "{{ my_domain }}"
+      tplc_acme_email: "{{ my_email }}"
