@@ -45,6 +45,24 @@
     group: "{{ tplc_traefik_config_file_group }}"
     mode: "{{ tplc_traefik_config_file_mode }}"
 
+- name: "Create default ssl certificate for traefik: Generate the private key"
+  openssl_privatekey:
+    path: "{{ tplc_traefik_default_sslkey }}"
+
+- name: "Create default ssl certificate for traefik: Generate the certificate signing request (CSR)"
+  openssl_csr:
+    path: "{{ tplc_traefik_default_sslcsr }}"
+    privatekey_path: "{{ tplc_traefik_default_sslkey }}"
+    common_name: "default.site"
+
+- name: "Create default ssl certificate for traefik: Generate the self-signed certificate"
+  openssl_certificate:
+    provider: selfsigned
+    path: "{{ tplc_traefik_default_sslcert }}"
+    csr_path: "{{ tplc_traefik_default_sslcsr }}"
+    privatekey_path: "{{ tplc_traefik_default_sslkey }}"
+    ownca_not_after: "+3650d"
+
 - name: Create certificates directory
   file:
     path: "{{ tplc_acme_certs_dir }}"
@@ -72,6 +90,8 @@
     volumes:
       - "{{ tplc_acme_certs_file }}:{{ tplc_traefik_container_certs_file }}:rw"
       - "{{ tplc_traefik_config_file }}:{{ tplc_traefik_container_config_file }}:ro"
+      - "{{ tplc_traefik_default_sslcert }}:{{ tplc_traefik_container_default_sslcert }}:ro"
+      - "{{ tplc_traefik_default_sslkey }}:{{ tplc_traefik_container_default_sslkey }}:ro"
       - "{{ tplc_docker_socket }}:{{ tplc_traefik_container_docker_socket }}:rw"
     labels:
       traefik.frontend.rule: "Host:{{ tplc_traefik_container_name }}.{{ tplc_domain_name }}"

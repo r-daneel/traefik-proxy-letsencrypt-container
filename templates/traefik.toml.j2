@@ -20,6 +20,9 @@ defaultEntryPoints = ["http", "https"]
   [entryPoints.https]
     address = ":{{ tplc_traefik_port_https }}"
     [entryPoints.https.tls]
+      [[entryPoints.https.tls.certificates]]
+        certFile = "{{ tplc_traefik_container_default_sslcert }}"
+        keyFile = "{{ tplc_traefik_container_default_sslkey }}"
 
 ################################################################
 # API and dashboard configuration
