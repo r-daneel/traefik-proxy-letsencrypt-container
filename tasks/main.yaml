@@ -26,7 +26,32 @@
     mode: "0600"
   changed_when: false
 
-- name: Get the credentials
+# Hacking the salted hash (part 1):
+# The hash salt changes on each run, regardless of actual change of the password
+# In order to stay idempotent, we try to connect with the 'new' credentials
+# We store the status code for the next task
+- name: Check our dashboard credentials
+  uri:
+    url: "https://{{ tplc_traefik_container_name }}.{{ tplc_domain_name }}"
+    url_username: "{{ tplc_dashboard_username }}"
+    url_password: "{{ tplc_dashboard_password }}"
+    status_code: [ 200, 401 ]
+    validate_certs: false
+  register: credential_check
+
+# Hacking the salted hash (part 2):
+# If the site returned a status=401, it means that the password has changed and needs to be enforced
+#   Nothing needs to be done, as the new hash is in the temp file and will be put into the new configuration
+# If ww successfully logged in (status=200), it is likely that the credentials on file are ok
+#   This ugly shell snippet then grabs the hash from the current file and overwrites the hash gnerated above
+- name: grab current password
+  shell: >
+    awk -F'"' '/^ *users =/ { print $2 }' {{ tplc_traefik_config_file }}
+    > {{ tplc_tempfile.path }}
+  when: credential_check.status == 200
+  changed_when: false
+
+- name: Read the credentials
   command: "head -n1 {{ tplc_tempfile.path }}"
   register: tplc_credentials
   changed_when: false

@@ -22,7 +22,3 @@ The example playbook `traefik-proxy-letsencrypt-container.yaml` run agains a hos
 ## Dashboard
 The container itself will run as a container named 'traefik' and will thus automatically generate an SSL certificate and respond to https://traefik.{your_domain}.
 
-## Caveats
-The Role is not 100% idempotent because of the password hash that is generated on each run.\
-The hash is different on each run, even if the password hasn't changed.\
-This may be fixed with some trick in the future.
