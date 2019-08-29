@@ -69,6 +69,7 @@
     owner: "{{ tplc_traefik_config_file_owner }}"
     group: "{{ tplc_traefik_config_file_group }}"
     mode: "{{ tplc_traefik_config_file_mode }}"
+  register: tplc_traefic_config_state
 
 - name: "Create default ssl certificate for traefik: Generate the private key"
   openssl_privatekey:
@@ -122,3 +123,4 @@
       traefik.frontend.rule: "Host:{{ tplc_traefik_container_name }}.{{ tplc_domain_name }}"
       traefik.port: "{{ tplc_traefik_container_dashboard_port }}"
     state: "started"
+    restart: "{{ tplc_traefic_config_state.changed }}"
