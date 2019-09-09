@@ -46,3 +46,7 @@ tplc_traefik_container_config_file: "/etc/traefik/traefik.toml"
 tplc_traefik_container_default_sslcert: "/etc/traefik/default_ssl.cert"
 tplc_traefik_container_default_sslkey: "/etc/traefik/default_ssl.key"
 tplc_traefik_container_docker_socket: "/var/run/docker.sock"
+
+# container restart policy:
+# always start/restart he container unless we told docker to stop it on purpose
+tplc_traefik_container_restart_policy: "unless-stopped"
