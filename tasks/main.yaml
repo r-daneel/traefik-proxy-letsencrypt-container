@@ -122,6 +122,7 @@
     labels:
       traefik.frontend.rule: "Host:{{ tplc_traefik_container_name }}.{{ tplc_domain_name }}"
       traefik.port: "{{ tplc_traefik_container_dashboard_port }}"
+      traefik.enable: "true"
     state: "started"
     restart_policy: "{{ tplc_traefik_container_restart_policy }}"
     restart: "{{ tplc_traefic_config_state.changed }}"
