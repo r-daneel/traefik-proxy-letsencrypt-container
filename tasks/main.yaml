@@ -35,7 +35,7 @@
     url: "https://{{ tplc_traefik_container_name }}.{{ tplc_domain_name }}"
     url_username: "{{ tplc_dashboard_username }}"
     url_password: "{{ tplc_dashboard_password }}"
-    status_code: [ 200, 401 ]
+    status_code: [ 200, 401, -1 ]
     validate_certs: false
   register: credential_check
 
@@ -69,6 +69,7 @@
     owner: "{{ tplc_traefik_config_file_owner }}"
     group: "{{ tplc_traefik_config_file_group }}"
     mode: "{{ tplc_traefik_config_file_mode }}"
+    backup: true
   register: tplc_traefic_config_state
 
 - name: "Create default ssl certificate for traefik: Generate the private key"

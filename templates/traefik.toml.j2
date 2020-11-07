@@ -29,7 +29,7 @@ defaultEntryPoints = ["http", "https"]
 ################################################################
 
 [api]
-entrypoint="dashboard"
+entryPoint="dashboard"
 
 ################################################################
 # Docker configuration backend
@@ -42,6 +42,7 @@ watch = true
 # containers that don't have `traefik.enable=true` will be ignored.
 exposedByDefault = false
 
+{% if tplc_acme_enable %}
 [acme]
   email = "{{ tplc_acme_email }}"
   storage = "{{ tplc_traefik_container_certs_file }}"
@@ -49,3 +50,4 @@ exposedByDefault = false
   onHostRule = true
   [acme.httpChallenge]
     entryPoint = "http"
+{% endif %}
