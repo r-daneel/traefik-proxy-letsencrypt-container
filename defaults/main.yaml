@@ -35,7 +35,7 @@ tplc_docker_socket: "/var/run/docker.sock"
 tplc_traefik_container_name: "traefik"
 tplc_traefik_container_dashboard_port: "8080"
 tplc_traefik_image_name: "traefik"
-tplc_traefik_image_tag: "latest"
+tplc_traefik_image_tag: "maroilles" # aka v1.7
 tplc_traefik_port_http: "80"
 tplc_traefik_port_https: "443"
 
